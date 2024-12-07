@@ -1,7 +1,7 @@
 'use client';
 
 import { ApiService } from '@/lib/services/api_service';
-import type { Task } from '@/lib/types';
+import type {Goal, Task} from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import 'dayjs/locale/ru';
 import { Button } from '../button';
 import { FaChevronLeft } from 'react-icons/fa';
+import {Loader2} from "lucide-react";
 
 interface CalendarProps {
     curDate: Date;
@@ -19,6 +20,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
     const router = useRouter();
     const [tasks, setTasks] = useState<Task[]>([]);
     const [date, setDate] = useState<Date>(curDate);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const generateDays = () => {
         const days = [];
@@ -31,27 +33,32 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
     const days = generateDays();
 
     useEffect(() => {
-        if (!initData) return;
-
-        const initDataStr = new URLSearchParams({
-            query_id: initData.queryId as string,
-            auth_date: (initData.authDate.getTime() / 1000).toString(),
-            hash: initData.hash,
-            user: JSON.stringify({
-                id: initData.user?.id,
-                first_name: initData.user?.firstName,
-                last_name: initData.user?.lastName,
-                username: initData.user?.username,
-                language_code: initData.user?.languageCode,
-                is_premium: initData.user?.isPremium,
-                allows_write_to_pm: initData.user?.allowsWriteToPm,
-            }),
-        }).toString();
-
         const fetchData = async () => {
+            setLoading(true);
+            if (!initData) {
+                setLoading(false);
+                return;
+            }
+
+            const initDataStr = new URLSearchParams({
+                query_id: initData.queryId as string,
+                auth_date: (initData.authDate.getTime() / 1000).toString(),
+                hash: initData.hash,
+                user: JSON.stringify({
+                    id: initData.user?.id,
+                    first_name: initData.user?.firstName,
+                    last_name: initData.user?.lastName,
+                    username: initData.user?.username,
+                    language_code: initData.user?.languageCode,
+                    is_premium: initData.user?.isPremium,
+                    allows_write_to_pm: initData.user?.allowsWriteToPm,
+                }),
+            }).toString();
+
             const isoDate = dayjs(date).toISOString();
             const data = await ApiService.getTasks(initDataStr, null, isoDate);
             setTasks(data);
+            setLoading(false);
         };
 
         fetchData();
@@ -75,8 +82,18 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
             }),
         }).toString();
 
-        await ApiService.confurmTask(task_id, initDataStr);
-        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== task_id));
+        await ApiService.confurmTask(task_id, initDataStr).then((res: Task) => {
+            setTasks((prevTasks) =>
+                prevTasks.map((task) => {
+                    if (task._id === task_id && res.complite) {
+                        return { ...task, complite: res.complite };
+                    }
+                    return task;
+                })
+            );
+        }).finally(() => {
+            setLoading(false);
+        });
     };
 
     const handleTaskClick = () => {
@@ -88,7 +105,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
     };
 
     const handleGoBack = () => {
-        router.back();
+        router.push('/');
     };
 
     return (
@@ -123,10 +140,14 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
                         <h3 className="text-md font-bold mb-2">
                             Задачи на {dayjs(date).locale('ru').format('D MMMM YYYY')}:
                         </h3>
-                        {tasks.length === 0 ? (
+                        {loading ? (
+                            <div className="flex justify-center items-center h-32">
+                                <Loader2 className="animate-spin"/>
+                            </div>
+                        ) : tasks.length === 0 ? (
                             <div className="text-center text-gray-500">
                                 У вас нет задач на день
-                                <br />
+                                <br/>
                                 Можно отдыхать!
                             </div>
                         ) : (

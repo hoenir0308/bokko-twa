@@ -2,7 +2,7 @@ import axios from "axios"
 
 const getInstance = () => {
     return axios.create({
-        baseURL: "https://bokko.qwerty-almaty.kz/",
+        baseURL: "https://bokko.grabitkorovany.org/",
         timeout: 100000
     });
 }

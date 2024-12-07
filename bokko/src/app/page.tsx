@@ -6,8 +6,9 @@ import { ApiService } from '@/lib/services/api_service';
 import { User } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import {Loader2} from "lucide-react";
 
 export default function Home() {
     const initData = useInitData(true);
@@ -49,29 +50,31 @@ export default function Home() {
         fetchMe();
     }, [initData]);
 
-    if (!user) {
+    if (!user && !loading) {
         return <RegisterForm />;
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center">
+        <div className="min-h-screen  flex flex-col items-center">
             {loading ? (
-                <div className="text-center text-gray-700">Загрузка данных...</div>
+                <div className="flex justify-center items-center h-screen">
+                    <Loader2 className="animate-spin"/>
+                </div>
             ) : (
                 <>
                     <div className="bg-accent w-full flex items-center justify-center py-10">
-                        <Image
+                    <Image
                             src={initData?.user?.photoUrl ? initData.user.photoUrl : '/images/profile.png'}
-                            alt={`${user.first_name}'s avatar`}
+                            alt={`${user?.first_name}'s avatar`}
                             width={80}
                             height={80}
                             className="rounded-full mr-4"
                         />
                         <div className="flex flex-col">
                             <h1 className="text-xl font-bold mb-2">
-                                {user.first_name} {user.last_name}
+                                {user?.first_name} {user?.last_name}
                             </h1>
-                            <p className="text-gray-700">Должность: {user.post}</p>
+                            <p className="text-gray-700">Должность: {user?.post}</p>
                         </div>
                     </div>
 

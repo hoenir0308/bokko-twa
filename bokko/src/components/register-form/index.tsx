@@ -12,7 +12,7 @@ const RegisterForm: React.FC = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [post, setPost] = useState('');
-    const [age, setAge] = useState(0);
+    const [age, setAge] = useState<number | null>(null);
     const [gender, setGender] = useState('');
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
@@ -54,7 +54,7 @@ const RegisterForm: React.FC = () => {
                 first_name: firstName,
                 last_name: lastName,
                 post,
-                age,
+                age ,
                 gender,
                 tg_id: initData.user?.id,
             };
@@ -139,7 +139,7 @@ const RegisterForm: React.FC = () => {
                         <Label htmlFor="age" className="block text-sm font-medium text-gray-700">
                             Возраст
                         </Label>
-                        <Input type="number" id="age" value={age} onChange={(e) => setAge(Number(e.target.value))} />
+                        <Input type="number" id="age" value={age!} onChange={(e) => setAge(Number(e.target.value))} />
                     </div>
                     {formErrors.age && (
                         <Alert variant="destructive">

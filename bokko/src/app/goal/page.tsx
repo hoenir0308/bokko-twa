@@ -129,7 +129,6 @@ export default function Goals() {
                         </Button>
                     </form>
                 ) : (
-                    // Если цель создана, показываем навигационные кнопки
                     <div>
                         <p className="text-center text-green-600 mb-4">Цель успешно создана!</p>
                         <div className="mt-4 flex flex-col space-y-2">

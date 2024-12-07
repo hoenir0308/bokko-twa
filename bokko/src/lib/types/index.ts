@@ -8,7 +8,7 @@ export interface User {
     last_name: string;
     post: string;
     gender: string;
-    age: number;
+    age: number | null;
     tg_id?: number;
 }
 

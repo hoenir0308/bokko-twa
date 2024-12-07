@@ -74,9 +74,9 @@ const Goals: React.FC = () => {
             return (
                 <div className="flex flex-col gap-28 mt-28">
                     <p className="text-lg text-center">У вас пока нет записанных целей</p>
-                    <Button onClick={handleGoalClick} className="text-xl font-semibold w-full h-[50px]">
-                        <FaPlus size={10} /> Добавить цель
-                    </Button>
+                    {/*<Button onClick={handleGoalClick} className="text-xl font-semibold w-full h-[50px]">*/}
+                    {/*    <FaPlus size={10} /> Добавить цель*/}
+                    {/*</Button>*/}
                 </div>
             );
         }
