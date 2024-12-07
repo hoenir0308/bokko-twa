@@ -31,8 +31,27 @@ export default function GanttComponent() {
     const [loading, setLoading] = useState<boolean>(true);
     const [open, setOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    const [initDataBlyat, setInitDataBlyat] = useState<any>(null);
+
 
     const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
+    const fetchTasks  =   async (goalId: string | null, initData : string) => {
+         await ApiService.getTasks(initData, goalId).then((data: Task[]) => {
+           setTasks(
+               data.map((task: any) => ({
+                   id: task._id!,
+                   name: task.title,
+                   start: new Date(task.create_date || task.deadline),
+                   end: new Date(task.end_date || task.deadline),
+                   progress: task.complite ? 100 : 0,
+                   type: 'task',
+               }))
+           );
+       }).finally(() => {
+              setLoading(false);
+       });
+
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,21 +71,14 @@ export default function GanttComponent() {
                     allows_write_to_pm: initData.user?.allowsWriteToPm,
                 }),
             }).toString();
-
+            setInitDataBlyat(initDataStr);
             try {
-                const data = await ApiService.getTasks(initDataStr, goalId);
-                const goal = await ApiService.getGoals(initDataStr);
-                setGoals(goal);
-                setTasks(
-                    data.map((task: any) => ({
-                        id: task._id!,
-                        name: task.title,
-                        start: new Date(task.create_date || task.deadline),
-                        end: new Date(task.end_date || task.deadline),
-                        progress: task.complite ? 100 : 0,
-                        type: 'task',
-                    }))
-                );
+               await ApiService.getGoals(initDataStr).then((data: Goal[]) => {
+                    setGoals(data);
+                   fetchTasks( data[0]._id!, initDataStr);
+
+                });
+
             } catch (error) {
                 console.error('Error fetching tasks:', error);
             } finally {
@@ -82,9 +94,11 @@ export default function GanttComponent() {
     }, [goalId, initData]);
 
     const handleGoalChange = (value: string) => {
-        setTasks([]);
 
-        setGoalId(value);
+
+        fetchTasks(value, initDataBlyat);
+
+
     };
 
     const handleGoBack = () => {
@@ -130,6 +144,7 @@ export default function GanttComponent() {
                             loading ? (
                                 <div>Загрузка данных...</div>
                             ) : (
+                              
                                 <Gantt
                                     tasks={tasks}
                                     viewMode={ViewMode.Day}
