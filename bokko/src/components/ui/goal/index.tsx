@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import { useRouter } from 'next/navigation';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { FaCalendarAlt, FaPlus } from 'react-icons/fa';
@@ -8,14 +8,23 @@ import { FaCalendarAlt, FaPlus } from 'react-icons/fa';
 import { ApiService } from '@/lib/services/api_service';
 import type { Goal, Task } from '@/lib/types';
 import { Button } from '../button';
+import {GoalHeader} from "./goal-header/goal-header";
+import {TasksList} from "./tasks/tasks";
+
+enum GoalFilter {
+    CURRENT_GOALS = 'Текущие цели',
+    COMPLETED_GOAlS = 'Завершенные цели',
+}
 
 const Goals: React.FC = () => {
     const initData = useInitData(true);
     const router = useRouter();
 
     const [goals, setGoals] = useState<Goal[]>([]);
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+    const [currentGoals, setCurrentGoals] = useState<Goal[]>([]);
+    const [completedGoals, setCompletedGoals] = useState<Goal[]>([])
+    const [filterType, setFilterType] = useState<GoalFilter>(GoalFilter.CURRENT_GOALS);
+    const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
 
     const createInitDataString = useCallback(() => {
         if (!initData) return '';
@@ -42,18 +51,7 @@ const Goals: React.FC = () => {
             setGoals(data);
         }
     }, [createInitDataString]);
-
-    const fetchTasks = useCallback(
-        async (goal_id: string) => {
-            const initDataStr = createInitDataString();
-            if (initDataStr) {
-                const data = await ApiService.getTasks(initDataStr, goal_id);
-                setTasks(data);
-                setSelectedGoal(goals.find((goal) => goal._id === goal_id) || null);
-            }
-        },
-        [createInitDataString, goals]
-    );
+    console.log(goals);
 
     useEffect(() => {
         if (initData) {
@@ -72,7 +70,7 @@ const Goals: React.FC = () => {
     const renderGoalsList = () => {
         if (goals.length === 0) {
             return (
-                <div className="flex flex-col gap-28 mt-28">
+                <div className="flex flex-col gap-28 mt-28 ml-8">
                     <p className="text-lg text-center">У вас пока нет записанных целей</p>
                     {/*<Button onClick={handleGoalClick} className="text-xl font-semibold w-full h-[50px]">*/}
                     {/*    <FaPlus size={10} /> Добавить цель*/}
@@ -82,14 +80,14 @@ const Goals: React.FC = () => {
         }
 
         return (
-            <ul className="space-y-2">
+            <ul className="space-y-2 border-0 list-none bg">
                 {goals.map((goal) => (
                     <GoalItem
                         key={goal._id}
                         goal={goal}
-                        selectedGoal={selectedGoal}
-                        tasks={tasks}
-                        onGoalClick={fetchTasks}
+                        setSelectedGoalId={setSelectedGoalId}
+                        isTaskOpened={selectedGoalId === goal._id}
+                        createInitDataString={createInitDataString}
                     />
                 ))}
             </ul>
@@ -99,73 +97,48 @@ const Goals: React.FC = () => {
     return (
         <div className="relative flex flex-col gap-4 text-black w-full flex-1 p-8">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-[500]">Мои цели</h2>
+                <h2 className="text-2xl font-[600]">Мои цели</h2>
                 {goals.length > 0 && (
-                    <Button onClick={navigateToCalendar} variant="outline" size="icon">
+                    <Button onClick={navigateToCalendar} variant="outline" size="icon" className='w-12 rounded-sm border-2'>
                         <FaCalendarAlt className="text-primary" />
                     </Button>
                 )}
             </div>
-
-            <Button onClick={handleGoalClick} className="text-xl font-semibold w-full h-[50px]">
+            <div className='min-h-[300px]'>
+                {renderGoalsList()}
+            </div>
+            <Button onClick={handleGoalClick} className="text-xl font-semibold w-full h-[50px] rounded-3xl">
                 <FaPlus size={10} /> Добавить цель
             </Button>
-
-            {renderGoalsList()}
         </div>
     );
 };
 
 interface GoalItemProps {
     goal: Goal;
-    selectedGoal: Goal | null;
-    tasks: Task[];
-    onGoalClick: (goalId: string) => void;
+    createInitDataString: () => string;
+    isTaskOpened: boolean;
+    setSelectedGoalId: (id: string | null) => void;
 }
 
-const GoalItem: React.FC<GoalItemProps> = ({ goal, selectedGoal, tasks, onGoalClick }) => {
-    const completedTasks = tasks.filter((task) => task.complite);
+const GoalItem: React.FC<GoalItemProps> = React.memo(({ goal, createInitDataString, isTaskOpened, setSelectedGoalId }) => {
+    const onGoalClick = () => {
+        if (isTaskOpened) {
+            setSelectedGoalId(null);
+        } else {
+            setSelectedGoalId(goal._id ? goal._id : null)
+        }
 
-    return (
-        <li
-            className="p-4 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition"
-            onClick={() => onGoalClick(goal._id as string)}
-        >
-            <div className="flex items-center w-full justify-between">
-                <div className="flex flex-col">
-                    <h3 className="text-md font-medium">{goal.title}</h3>
-                    <p className="text-sm text-gray-600">{goal.description}</p>
-                </div>
-                {selectedGoal?._id === goal._id && tasks.length > 0 && (
-                    <p>
-                        {completedTasks.length}/{tasks.length}
-                    </p>
-                )}
-            </div>
-
-            {selectedGoal?._id === goal._id && <TasksList tasks={tasks} />}
-        </li>
-    );
-};
-
-const TasksList: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
-    if (tasks.length === 0) {
-        return <p className="text-sm text-gray-500">Нет задач для этой цели.</p>;
     }
 
     return (
-        <ul className="mt-2 pl-4 border-l border-gray-400">
-            {tasks.map((task) => (
-                <li key={task._id} className="p-2 flex items-center border border-gray-300 rounded-md">
-                    <input type="checkbox" checked={task.complite} className="mr-2" disabled />
-                    <div>
-                        <h4 className="text-md font-medium">{task.title}</h4>
-                        <p className="text-sm text-gray-600">{task.description}</p>
-                    </div>
-                </li>
-            ))}
-        </ul>
+        <li
+            className="py-4 cursor-pointer transition"
+        >
+            <GoalHeader onClick={onGoalClick} title={goal.title} isTaskOpened={isTaskOpened}  completePercent={goal.complete ? goal.complete : 0} />
+            <TasksList isTaskOpened={isTaskOpened} createInitDataString={createInitDataString} id={goal._id} />
+        </li>
     );
-};
+});
 
 export default Goals;
