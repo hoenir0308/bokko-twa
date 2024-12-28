@@ -1,4 +1,4 @@
-        import { ApiService } from '@/lib/services/api_service';
+import { ApiService } from '@/lib/services/api_service';
 import { User } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { useCallback, useEffect, useState } from 'react';

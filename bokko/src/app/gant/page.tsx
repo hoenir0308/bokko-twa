@@ -55,7 +55,6 @@ export default function GanttComponent() {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(initData);
             setLoading(true);
             if (!initData) return;
             const initDataStr = new URLSearchParams({
@@ -95,7 +94,11 @@ export default function GanttComponent() {
     }, [goalId, initData]);
 
     const handleGoalChange = (value: string) => {
+
+
         fetchTasks(value, initDataBlyat);
+
+
     };
 
     const handleGoBack = () => {
@@ -141,7 +144,7 @@ export default function GanttComponent() {
                             loading ? (
                                 <div>Загрузка данных...</div>
                             ) : (
-
+                              
                                 <Gantt
                                     tasks={tasks}
                                     viewMode={ViewMode.Day}

@@ -1,36 +1,17 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import cls from './globals.css';
+import './globals.css';
 import { ClientSdkProvider } from '@/lib/clientsdkprovider';
 
-const ManropeLight = localFont({
-    src: './../../public/fonts/Manrope/Manrope-Light.woff2',
-    variable: '--font-manrope-300',
-    weight: '300',
+const geistSans = localFont({
+    src: './../../public/fonts/GeistVF.woff',
+    variable: '--font-geist-sans',
+    weight: '100 900',
 });
-
-const ManropeRegular = localFont({
-    src: './../../public/fonts/Manrope/Manrope-Regular.woff2',
-    variable: '--font-manrope-400',
-    weight: '400',
-});
-
-const ManropeMedium = localFont({
-    src: './../../public/fonts/Manrope/Manrope-Medium.woff2',
-    variable: '--font-manrope-500',
-    weight: '500',
-});
-
-const ManropeSemiBold = localFont({
-    src: './../../public/fonts/Manrope/Manrope-SemiBold.woff2',
-    variable: '--font-manrope-600',
-    weight: '600',
-});
-
-const ManropeBold = localFont({
-    src: './../../public/fonts/Manrope/Manrope-Bold.woff2',
-    variable: '--font-manrope-700',
-    weight: '700',
+const geistMono = localFont({
+    src: './../../public/fonts/GeistMonoVF.woff',
+    variable: '--font-geist-mono',
+    weight: '100 900',
 });
 
 export const metadata: Metadata = {
@@ -43,17 +24,9 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    console.log('root');
     return (
         <html lang="en">
-            <body className={`
-            ${ManropeLight.variable} 
-            ${ManropeRegular.variable} 
-            ${ManropeMedium.variable} 
-            ${ManropeSemiBold.variable} 
-            ${ManropeBold.variable} 
-            ${cls}
-            antialiased`}>
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <ClientSdkProvider>{children}</ClientSdkProvider>
             </body>
         </html>

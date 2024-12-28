@@ -18,7 +18,6 @@ export interface Goal {
     description: string;
     deadline: Date;
     tg_id?: number;
-    complete?: number;
 }
 
 export interface Task {
