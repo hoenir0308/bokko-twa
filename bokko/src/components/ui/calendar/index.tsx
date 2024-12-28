@@ -17,6 +17,7 @@ interface CalendarProps {
 
 const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
     const initData = useInitData(true);
+    console.log(initData);
     const router = useRouter();
     const [tasks, setTasks] = useState<Task[]>([]);
     const [date, setDate] = useState<Date>(curDate);
@@ -57,6 +58,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
 
             const isoDate = dayjs(date).toISOString();
             const data = await ApiService.getTasks(initDataStr, null, isoDate);
+            console.log(data);
             setTasks(data);
             setLoading(false);
         };

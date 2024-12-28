@@ -10,6 +10,7 @@ import { useInitData } from '@telegram-apps/sdk-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
+import {Loader} from "@/components/ui/Loader/Loader";
 
 export default function Goals() {
     const initData = useInitData(true);
@@ -21,6 +22,7 @@ export default function Goals() {
     });
     const [goalId, setGoalId] = useState<string | null>(null); // Изменил тип на null для удобства проверки
     const [goalCreated, setGoalCreated] = useState<boolean>(false); // Для отображения формы/сообщений
+    const [isGoalLoading, setIsGoalLoading] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -51,10 +53,13 @@ export default function Goals() {
         }).toString();
 
         try {
-            const goal_response = await ApiService.createGoal(goal, initDataStr);
-            setGoal({ title: '', description: '', deadline: new Date() });
-            setGoalId(goal_response._id);
-            setGoalCreated(true); // Устанавливаем флаг, что цель создана
+            setIsGoalLoading(true);
+            await ApiService.createGoal(goal, initDataStr).then((goal_response) => {
+                setGoal({ title: '', description: '', deadline: new Date() });
+                setGoalId(goal_response._id);
+                setGoalCreated(true); // Устанавливаем флаг, что цель создана
+            }).finally(() => setIsGoalLoading(false));
+
         } catch (error) {
             console.error('Failed to create goal:', error);
         }
@@ -65,7 +70,7 @@ export default function Goals() {
     };
 
     const handleAddTasks = () => {
-        router.push(`/task?goal_id=${goalId}`);
+        router.push(`/task/edit?goal_id=${goalId}`);
     };
 
     const handleAiHelp = async () => {
@@ -85,58 +90,42 @@ export default function Goals() {
             <div className="p-4">
                 {!goalCreated ? ( // Если цель еще не создана, показываем форму
                     <form onSubmit={handleCreate} className="space-y-4">
-                        <div>
-                            <Label className="block mb-1" htmlFor="title">
-                                Название:
-                            </Label>
-                            <Input
+                            <input
+                                placeholder={'Название цели*'}
                                 type="text"
                                 id="title"
                                 name="title"
                                 value={goal.title}
                                 onChange={handleChange}
+                                className="font-[500] border-0 border-b-black border-b w-[100%] pl-6 text-lg"
                                 required
                             />
-                        </div>
-                        <div>
-                            <Label className="block mb-1" htmlFor="description">
-                                Описание:
+                            <Label htmlFor="description">
+                                <p className="block mb-1 ml-6 mt-4 text-lg text-neutral-400">Описание цели</p>
                             </Label>
                             <Textarea
                                 id="description"
                                 name="description"
+                                className="pl-6"
                                 value={goal.description}
                                 onChange={handleChange}
                                 required
                             />
-                        </div>
-                        <div>
-                            <Label className="block mb-1" htmlFor="deadline">
-                                Срок выполнения:
-                            </Label>
-                            <Input
-                                type="date"
-                                id="deadline"
-                                name="deadline"
-                                value={goal.deadline.toISOString().substring(0, 10)}
-                                onChange={(e) => setGoal({ ...goal, deadline: new Date(e.target.value) })}
-                                required
-                                className="w-full p-2 border border-gray-300 rounded-md"
-                            />
-                        </div>
-                        <Button type="submit" className="w-full text-lg font-semibold">
-                            Создать Цель
+                        <Button type="submit" className={`w-full text-lg font-semibold ${isGoalLoading ? 'bg-gray-400' : ''}`} disabled={isGoalLoading}>
+                            {
+                                isGoalLoading ? <Loader /> : 'Создать цель'
+                            }
                         </Button>
                     </form>
                 ) : (
                     <div>
                         <p className="text-center text-green-600 mb-4">Цель успешно создана!</p>
                         <div className="mt-4 flex flex-col space-y-2">
-                            <Button onClick={handleAddTasks} className="w-full text-lg font-semibold">
-                                Добавить задачи
+                            <Button onClick={handleAiHelp} className="w-full text-lg font-medium">
+                                Использовать ИИ
                             </Button>
-                            <Button variant="secondary" onClick={handleAiHelp} className="w-full text-lg font-semibold">
-                                Помощь ИИ
+                            <Button variant="secondary" onClick={handleAddTasks} className="w-full text-lg font-medium">
+                                Разделить самостоятельно
                             </Button>
                         </div>
                     </div>

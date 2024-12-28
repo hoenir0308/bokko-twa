@@ -50,7 +50,7 @@ function AiContent() {
     }, [initData, params]);
 
     const handleGoTask = (goal_id: string) => {
-        router.push(`/task?goal_id=${goal_id}`);
+        router.push(`/task/edit?goal_id=${goal_id}`);
     };
 
     const handleGoBack = () => {

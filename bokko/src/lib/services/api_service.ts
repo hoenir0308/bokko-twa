@@ -18,7 +18,7 @@ export const ApiService = {
         } catch (err) {
             throw err
         }
-    }, 
+    },
     async me(auth: string): Promise<User> {
         try {
             return await instance.get(`/user/me/`,
@@ -33,7 +33,7 @@ export const ApiService = {
         } catch (err) {
             throw err
         }
-    }, 
+    },
     async updateMe(user: User, auth: string) {
         try {
             return await instance.put(`/user/`,
@@ -48,7 +48,7 @@ export const ApiService = {
         } catch (err) {
             throw err
         }
-    }, 
+    },
     async createGoal(goal: Goal, auth: string) {
         try {
             return await instance.post(`/goal/`,
@@ -73,7 +73,24 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
+                console.log(res.data);
                 return res.data as Goal[]
+            })
+        } catch (err) {
+            throw err
+        }
+    },
+    async getTask(id: string, auth: string): Promise<Task> {
+        try {
+            return await instance.get(`/task/fromid/?task_id=${id}`,
+                {
+                    headers: {
+                        Authorization: `twa ${auth}`
+                    }
+                }
+            ). then((res) => {
+                console.log(res.data);
+                return res.data as Task
             })
         } catch (err) {
             throw err
@@ -103,7 +120,23 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                return res.data 
+                return res.data
+            })
+        } catch (err) {
+            throw err
+        }
+    },
+
+    async editTask(task_id: string, task: Task, auth: string) {
+        try {
+            return await instance.put(`/task/?task_id=${task_id}`,
+                task, {
+                    headers: {
+                        Authorization: `twa ${auth}`
+                    }
+                }
+            ). then((res) => {
+                return res.data
             })
         } catch (err) {
             throw err
@@ -123,7 +156,7 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                return res.data 
+                return res.data
             })
         } catch (err) {
             throw err
@@ -138,7 +171,7 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                return res.data 
+                return res.data
             })
         } catch (err) {
             throw err
@@ -153,7 +186,7 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                return res.data 
+                return res.data
             })
         } catch (err) {
             throw err
