@@ -135,9 +135,6 @@ export default function Goals() {
                             <Button onClick={handleAddTasks} className="w-full text-lg font-semibold">
                                 Добавить задачи
                             </Button>
-                            <Button variant="secondary" onClick={handleAiHelp} className="w-full text-lg font-semibold">
-                                Помощь ИИ
-                            </Button>
                         </div>
                     </div>
                 )}
