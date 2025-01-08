@@ -1,6 +1,5 @@
 'use client';
 
-
 import { ApiService } from '@/lib/services/api_service';
 import type { Task, Goal } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
@@ -10,20 +9,22 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { FaChevronLeft } from 'react-icons/fa';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-time-picker/dist/TimePicker.css';
 import {TaskForm} from "@/components/ui/task/task-form";
+import {Loader2} from "lucide-react";
+import {TaskFormLoading} from "@/components/ui/task/skeletons/task-form-loading";
 
-function TaskContent() {
+function TaskEdit() {
     const initData = useInitData();
     const params = useSearchParams();
     const router = useRouter();
     const [task, setTask] = useState<Task>();
     const [taskId, setTaskId] = useState<string>('');
     const [goalId, setGoalId] = useState<string>('');
-    const [goals, setGoals] = useState<Goal[]>();
+    const [goalTitle, setGoalTitle] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
     const fetchData = async (id: string) => {
         console.log('fetch');
         if (initData) {
@@ -41,23 +42,26 @@ function TaskContent() {
                     allows_write_to_pm: initData.user?.allowsWriteToPm,
                 }),
             }).toString();
+            setIsLoading(true)
+            setIsError(false);
             await ApiService.getTask(id, initDataStr).then((data) => {
                 setTask(data)
-            })
-            await ApiService.getTasks(initDataStr, goalId).then((data) => {
-                setGoals(data);
-            });
+            }).finally(() => setIsLoading(false)).catch(() => setIsError(true))
         }
     };
 
     useEffect(() => {
         const id1 = params.get('task_id');
         const id2 = params.get('goal_id');
+        const title = params.get('goal_title');
         if (id1) {
             setTaskId(id1);
         }
         if (id2) {
             setGoalId(id2);
+        }
+        if (title) {
+            setGoalTitle(title);
         }
     }, [])
 
@@ -69,7 +73,6 @@ function TaskContent() {
         router.back();
     };
 
-    if (task) {
         return (
             <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
                 <div className="bg-secondary">
@@ -77,45 +80,35 @@ function TaskContent() {
                         <Button onClick={handleGoBack} className="text-lg font-semibold" size="icon" variant="ghost">
                             <FaChevronLeft color="white" />
                         </Button>
-                        <h2 className="text-lg text-white font-semibold">Добавить задачу</h2>
+                        <h2 className="text-lg text-white font-semibold">Редактировать задачу</h2>
                     </div>
                 </div>
-                <div className="w-full p-4 text-black rounded-md shadow-md">
-                    {!goalId && goals && goals.length > 0 ? (
-                        <div>
-                            <Label htmlFor="goalSelect" className="text-sm font-medium text-gray-700">
-                                Выберите цель:
-                            </Label>
-                            <Select onValueChange={(value) => setGoalId(value)} defaultValue="">
-                                <SelectTrigger id="goalSelect" className="mt-1 w-full">
-                                    <SelectValue defaultValue={goals[0]._id} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {goals.map((goal) => {
-                                        if (goal._id && goal._id !== '') {
-                                            return (
-                                                <SelectItem key={goal._id} value={goal._id}>
-                                                    {goal.title}
-                                                </SelectItem>
-                                            );
-                                        }
-                                    })}
-                                </SelectContent>
-                            </Select>
+
+                    {
+                        isLoading ?
+                            <TaskFormLoading /> :
+                            isError ? (
+                                    <div className="w-full flex-col h-full flex justify-center align-middle gap-4 pl-12 pr-12">
+                                        <h1 className="text-center font-[700]">
+                                            Произошла ошибка при загрузке задачи
+                                        </h1>
+                                        <Button onClick={() => fetchData(taskId ? taskId : '')}>Повторить попытку</Button>
+                                    </div>
+                                ) :
+                                <div className="w-full p-4 text-black rounded-md shadow-md">
+                                    <TaskForm isEdit={true} editTask={task} task_id={taskId} goal_id={goalId}
+                                              goalTitle={goalTitle}/>
+                                </div>
+                    }
+
                         </div>
-                    ) : (
-                        <TaskForm isEdit={true} editTask={task} task_id={taskId} goal_id={goalId} />
-                    )}
-                </div>
-            </div>
-        );
-    }
-}
+                        );
+                    }
 
 export default function Task() {
     return (
-        <React.Suspense fallback={<div>loading...</div>}>
-            <TaskContent />
+        <React.Suspense fallback={<Loader2 className="animate-spin" />}>
+            <TaskEdit />
         </React.Suspense>
     );
 }

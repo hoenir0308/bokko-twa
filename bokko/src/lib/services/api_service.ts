@@ -3,6 +3,11 @@ import getInstance from "./instance";
 
 const instance = getInstance();
 
+export interface IEditTask {
+    task_id: string;
+    updates: Task,
+}
+
 export const ApiService = {
     async reg(user: User, auth: string) {
         try {
@@ -73,7 +78,6 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                console.log(res.data);
                 return res.data as Goal[]
             })
         } catch (err) {
@@ -113,6 +117,7 @@ export const ApiService = {
     },
     async createTask(goal_id: string, task: Task, auth: string) {
         try {
+            console.log(task);
             return await instance.post(`/task/?goal_id=${goal_id}`,
                 task, {
                     headers: {
@@ -120,7 +125,8 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                return res.data
+                console.log(res.data);
+                return res.data as Task;
             })
         } catch (err) {
             throw err
@@ -142,6 +148,21 @@ export const ApiService = {
             throw err
         }
     },
+    async editTasks(tasks: IEditTask[], auth: string) {
+        try {
+            return await instance.patch(`/task/`,
+                tasks, {
+                    headers: {
+                        Authorization: `twa ${auth}`
+                    }
+                }
+            ). then((res) => {
+                return res.data["updated_tasks"] as Task[]
+            })
+        } catch (err) {
+            throw err
+        }
+    },
     async getTasks( auth: string, goal_id?: string | null, date?:string | null) {
         try {
             let url = `/task/`
@@ -156,7 +177,8 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                return res.data
+                const data: Task[] = res.data;
+                return data.sort((task1, task2) => task1.index - task2.index);
             })
         } catch (err) {
             throw err
@@ -164,7 +186,7 @@ export const ApiService = {
     },
     async deleteTask(task_id: string, auth: string) {
         try {
-            return await instance.delete(`/task/?task_id=${task_id}`,
+            return await instance.delete(`/task?task_id=${task_id}`,
                 {
                     headers: {
                         Authorization: `twa ${auth}`
@@ -177,9 +199,9 @@ export const ApiService = {
             throw err
         }
     },
-    async confurmTask(task_id: string, auth: string) {
+    async confurmTask(task_id: string, state: boolean, auth: string) {
         try {
-            return await instance.put(`/task/confurm/?task_id=${task_id}`, {},
+            return await instance.put(`/task/confurm/?task_id=${task_id}&state=${state}`, {},
                 {
                     headers: {
                         Authorization: `twa ${auth}`

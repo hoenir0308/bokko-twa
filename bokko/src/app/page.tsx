@@ -14,39 +14,41 @@ export default function Home() {
     const initData = useInitData(true);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isInited, setIsInited] = useState<boolean>(false);
 
     useEffect(() => {
         if (!initData) return;
+        if(!isInited) {
+            setIsInited(true)
+            const initDataStr = new URLSearchParams({
+                query_id: initData.queryId as string,
+                auth_date: (initData.authDate.getTime() / 1000).toString(),
+                hash: initData.hash,
+                user: JSON.stringify({
+                    id: initData.user?.id,
+                    first_name: initData.user?.firstName,
+                    last_name: initData.user?.lastName,
+                    username: initData.user?.username,
+                    language_code: initData.user?.languageCode,
+                    is_premium: initData.user?.isPremium,
+                    allows_write_to_pm: initData.user?.allowsWriteToPm,
+                }),
+            }).toString();
 
-        const initDataStr = new URLSearchParams({
-            query_id: initData.queryId as string,
-            auth_date: (initData.authDate.getTime() / 1000).toString(),
-            hash: initData.hash,
-            user: JSON.stringify({
-                id: initData.user?.id,
-                first_name: initData.user?.firstName,
-                last_name: initData.user?.lastName,
-                username: initData.user?.username,
-                language_code: initData.user?.languageCode,
-                is_premium: initData.user?.isPremium,
-                allows_write_to_pm: initData.user?.allowsWriteToPm,
-            }),
-        }).toString();
+            console.log(initData?.user?.photoUrl);
 
-        console.log(initData?.user?.photoUrl);
-
-        const fetchMe = async () => {
-            try {
-                const user = await ApiService.me(initDataStr);
-                setUser(user);
-            } catch (error) {
-                console.error('Error fetching user:', error);
-            } finally {
-                setLoading(false);
+            const fetchMe = async () => {
+                try {
+                    const user = await ApiService.me(initDataStr);
+                    setUser(user);
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                } finally {
+                    setLoading(false);
+                }
             }
-        };
-
-        fetchMe();
+            fetchMe();
+        }
     }, [initData]);
 
     if (!user && !loading) {

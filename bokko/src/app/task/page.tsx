@@ -22,20 +22,26 @@ function TaskContent() {
     const [task, setTask] = useState<Task | null>(null);
     const [taskId, setTaskId] = useState<string>('');
     const [goalId, setGoalId] = useState<string>('');
-
+    const [goalTitle, setGoalTitle] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isFetching, setIsFetching] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [deadline, setDeadline] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
-
+    console.log(task?.end_date)
     useEffect(() => {
         const id1 = params.get('task_id');
         const id2 = params.get('goal_id');
+        const title = params.get('goal_title');
         if (id1) {
             setTaskId(id1);
         }
         if (id2) {
             setGoalId(id2);
+        }
+
+        if (title) {
+            setGoalTitle(title);
         }
     }, [])
 
@@ -68,10 +74,9 @@ function TaskContent() {
             setError(null);
             console.log(id);
             await ApiService.getTask(id, initDataStr).then((data) => {
-                console.log(new Date(data.deadline));
+                console.log(new Date(data));
                 setDeadline(new Date(data.deadline));
-                // @ts-ignore
-                setEndDate(new Date(data.end_date))
+                setEndDate(new Date(data.end_date));
                 setTask(data);
             }).catch(() => {
                 setError('Не удалось получить задачу, обновите страницу')
@@ -82,7 +87,7 @@ function TaskContent() {
     };
 
     const handleEdit = () => {
-        router.push(`/task/edit?task_id=${taskId}&goal_id=${goalId}`);
+        router.push(`/task/edit?task_id=${taskId}&goal_id=${goalId}&goal_title=${goalTitle}`);
     };
 
     const handleGoBack = () => {
@@ -110,9 +115,14 @@ function TaskContent() {
                 allows_write_to_pm: initData.user?.allowsWriteToPm,
             }),
         }).toString();
-
-        await ApiService.confurmTask(taskId, initDataStr).finally(() => {
-            setIsLoading(false);
+        setIsFetching(true)
+        await ApiService.confurmTask(taskId, true, initDataStr).then(() => {
+            setTask({
+                ...task!,
+                complite: true,
+            })
+        }).finally(() => {
+            setIsFetching(false)
         });
     };
 
@@ -169,15 +179,15 @@ function TaskContent() {
                     {
                         task.complite ? <h2 className="text-center mt-20 text-lime-700">Задача выполнена</h2> : (
                             <>
-                                <Button onClick={handleEdit} className="mt-20 mb-3 w-full text-lg font-medium">
+                                <Button disabled={isFetching} onClick={handleEdit} className={`mt-20 mb-3 w-full text-lg font-medium ${isFetching ? 'bg-gray-400' : ''}`}>
                                     Редактировать
                                 </Button>
-                            <Button onClick={handleStart} className="mt-20 mb-3 w-full text-lg font-medium">
+                            <Button disabled={isFetching} onClick={handleStart} className={`mb-3 w-full text-lg font-medium ${isFetching ? 'bg-gray-400' : ''}`}>
                                 Перейти к выполненению
                             </Button>
-                        <Button variant="secondary" onClick={handleConfirmTask} className="w-full text-lg font-medium">
+                        <Button disabled={isFetching} variant="secondary" onClick={handleConfirmTask} className={`w-full text-lg font-medium ${isFetching ? 'bg-gray-400' : ''}`}>
                     {
-                        isLoading ? <Loader /> : "Отметить выполненной"
+                        isFetching ? <Loader /> : "Отметить выполненной"
                     }
                 </Button>
                             </>

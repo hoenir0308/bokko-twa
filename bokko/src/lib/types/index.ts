@@ -30,4 +30,5 @@ export interface Task {
     goal_id?: string;
     end_date?: Date;
     create_date?: Date;
+    index: number;
 }

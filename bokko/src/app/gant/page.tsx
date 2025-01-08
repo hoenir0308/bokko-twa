@@ -141,7 +141,6 @@ export default function GanttComponent() {
                             loading ? (
                                 <div>Загрузка данных...</div>
                             ) : (
-
                                 <Gantt
                                     tasks={tasks}
                                     viewMode={ViewMode.Day}

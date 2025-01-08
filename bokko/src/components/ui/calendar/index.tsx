@@ -84,7 +84,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
             }),
         }).toString();
 
-        await ApiService.confurmTask(task_id, initDataStr).then((res: Task) => {
+        await ApiService.confurmTask(task_id, true, initDataStr).then((res: Task) => {
             setTasks((prevTasks) =>
                 prevTasks.map((task) => {
                     if (task._id === task_id && res.complite) {
@@ -128,17 +128,17 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
                             <div
                                 key={index}
                                 className={`p-2 cursor-pointer text-center rounded-md ${
-                                    dayjs(day).isSame(date, 'day') ? 'bg-gray-300' : 'bg-gray-100'
+                                    dayjs(day).isSame(date, 'day') ? 'bg-primary' : 'bg-gray-100'
                                 }`}
                                 onClick={() => setDate(day)}
                             >
-                                <div>{dayjs(day).locale('ru').format('D')}</div>
-                                <div>{dayjs(day).locale('ru').format('dd').toUpperCase()}</div>
+                                <div className="font-[700]">{dayjs(day).locale('ru').format('D')}</div>
+                                <div className="font-[700]">{dayjs(day).locale('ru').format('dd').toUpperCase()}</div>
                             </div>
                         ))}
                     </div>
 
-                    <div className="mt-4">
+                    <div className="mt-6">
                         <h3 className="text-md font-bold mb-2">
                             Задачи на {dayjs(date).locale('ru').format('D MMMM YYYY')}:
                         </h3>
@@ -157,15 +157,15 @@ const CalendarComponent: React.FC<CalendarProps> = ({ curDate }) => {
                                 {tasks.map((task) => (
                                     <li
                                         key={task._id}
-                                        className="bg-gray-100 p-2 rounded-md shadow-sm flex items-center justify-between"
+                                        className="pl-6 pr-6 flex items-center justify-between"
                                     >
                                         <div>
-                                            <p className="font-semibold">{task.title}</p>
-                                            <p className="text-gray-600">{task.description}</p>
+                                            <p className="font-semibold text-xl">{task.title}</p>
+                                            <p className="text-gray-600 text-md">{task.description}</p>
                                         </div>
                                         <input
                                             type="checkbox"
-                                            className="ml-4"
+                                            className="ml-4 w-5 h-5 hover:bg-neutral-500 cursor-pointer"
                                             checked={task.complite}
                                             onChange={() => handleConfirmTask(task?._id || '')}
                                         />

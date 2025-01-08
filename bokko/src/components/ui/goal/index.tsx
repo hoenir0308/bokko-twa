@@ -21,9 +21,7 @@ const Goals: React.FC = () => {
     const router = useRouter();
 
     const [goals, setGoals] = useState<Goal[]>([]);
-    const [currentGoals, setCurrentGoals] = useState<Goal[]>([]);
-    const [completedGoals, setCompletedGoals] = useState<Goal[]>([])
-    const [filterType, setFilterType] = useState<GoalFilter>(GoalFilter.CURRENT_GOALS);
+    const [isGoalsLoading, setIsGoalsLoading] = useState<boolean>(false);
     const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
 
     const createInitDataString = useCallback(() => {
@@ -45,10 +43,14 @@ const Goals: React.FC = () => {
     }, [initData]);
 
     const fetchGoals = useCallback(async () => {
+        setIsGoalsLoading(true);
         const initDataStr = createInitDataString();
         if (initDataStr) {
-            const data = await ApiService.getGoals(initDataStr);
-            setGoals(data);
+            await ApiService.getGoals(initDataStr).then((data) => {
+                setGoals(data);
+            }).finally(() => {
+                setIsGoalsLoading(false)
+            });
         }
     }, [createInitDataString]);
     console.log(goals);
@@ -68,6 +70,16 @@ const Goals: React.FC = () => {
     };
 
     const renderGoalsList = () => {
+        if (isGoalsLoading) {
+            return (
+                <div className="flex flex-col gap-28 mt-28 ml-8">
+                    <h2>
+                        Загружаем ваши цели...
+                    </h2>
+                </div>
+            )
+        }
+
         if (goals.length === 0) {
             return (
                 <div className="flex flex-col gap-28 mt-28 ml-8">
@@ -133,10 +145,10 @@ const GoalItem: React.FC<GoalItemProps> = React.memo(({ goal, createInitDataStri
 
     return (
         <li
-            className="py-4 cursor-pointer transition"
+            className="py-1 cursor-pointer transition"
         >
             <GoalHeader onClick={onGoalClick} title={goal.title} isTaskOpened={isTaskOpened}  completePercent={goal.complete ? goal.complete : 0} />
-            <TasksList isTaskOpened={isTaskOpened} createInitDataString={createInitDataString} id={goal._id} />
+            <TasksList isTaskOpened={isTaskOpened} createInitDataString={createInitDataString} id={goal._id} goalTitle={goal.title} />
         </li>
     );
 });

@@ -70,7 +70,7 @@ export default function Goals() {
     };
 
     const handleAddTasks = () => {
-        router.push(`/task/edit?goal_id=${goalId}`);
+        router.push(`/task/create?goal_id=${goalId}&goal_title=${goal.title}`);
     };
 
     const handleAiHelp = async () => {
@@ -121,9 +121,9 @@ export default function Goals() {
                     <div>
                         <p className="text-center text-green-600 mb-4">Цель успешно создана!</p>
                         <div className="mt-4 flex flex-col space-y-2">
-                            <Button onClick={handleAiHelp} className="w-full text-lg font-medium">
-                                Использовать ИИ
-                            </Button>
+                            {/*<Button onClick={handleAiHelp} className="w-full text-lg font-medium">*/}
+                            {/*    Использовать ИИ*/}
+                            {/*</Button>*/}
                             <Button variant="secondary" onClick={handleAddTasks} className="w-full text-lg font-medium">
                                 Разделить самостоятельно
                             </Button>
