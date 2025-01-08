@@ -1,10 +1,9 @@
 import React, {memo, useCallback, useEffect, useState} from 'react';
-import {TaskCard, TaskCardLoading} from "@/components/ui/task/task-card";
+import {TaskCard} from "@/components/ui/task/task-card";
 import ReactDragListView from "react-drag-listview";
 import {Task} from "@/lib/types";
 import {ApiService, IEditTask} from "@/lib/services/api_service";
 import {useInitData} from "@telegram-apps/sdk-react";
-import {addDays} from "@/lib/helpers/addDays";
 import {Button} from "@/components/ui/button";
 import {Loader} from "@/components/ui/Loader/Loader";
 import {getRuDayByNum} from "@/lib/helpers/getRuDayByNum";
@@ -134,7 +133,7 @@ export const TaskFormList = memo((props: taskFormListProps) => {
     return (
         <>
             {
-                isDragDate && (
+                (dateDiff > 0) && (
                     <div className="flex justify-start gap-4 pl-6 pr-6 mt-4">
                         <input
                             type="checkbox"

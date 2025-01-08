@@ -1,4 +1,4 @@
-import React, {memo, MutableRefObject, useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, MutableRefObject, useEffect, useRef, useState} from 'react';
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
 import dayjs from "dayjs";
@@ -6,11 +6,9 @@ import DatePicker from "react-datepicker";
 import {Button} from "@/components/ui/button";
 import {useInitData} from "@telegram-apps/sdk-react";
 import {useRouter} from "next/navigation";
-import type {Goal, Task} from "@/lib/types";
+import type {Task} from "@/lib/types";
 import {ApiService, IEditTask} from "@/lib/services/api_service";
 import './timepicker.css';
-import {TaskCard, TaskCardLoading} from "@/components/ui/task/task-card";
-import ReactDragListView from 'react-drag-listview';
 import {Loader} from "@/components/ui/Loader/Loader";
 import {addDays} from "@/lib/helpers/addDays";
 import {getRuDayByNum} from "@/lib/helpers/getRuDayByNum";
@@ -98,7 +96,7 @@ export const TaskForm = memo((props:  Props) => {
             if (!id) return;
             await ApiService.editTasks([{
                 task_id: id,
-                updates: {...task, end_date: startDate, deadline: new Date(task.deadline), create_date: new Date(taskl.create_date)},
+                updates: {...task, end_date: startDate, deadline: new Date(task.deadline), create_date: new Date(task.create_date)},
             }], initDataStr).then(async () => {
                 await onFulfilledTask(initDataStr, isNext, editTask?._id)
             }).finally(() => setIsLoading(false));
