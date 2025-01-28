@@ -93,7 +93,6 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                console.log(res.data);
                 return res.data as Task
             })
         } catch (err) {
@@ -117,7 +116,6 @@ export const ApiService = {
     },
     async createTask(goal_id: string, task: Task, auth: string) {
         try {
-            console.log(task);
             return await instance.post(`/task/?goal_id=${goal_id}`,
                 task, {
                     headers: {
@@ -125,7 +123,6 @@ export const ApiService = {
                     }
                 }
             ). then((res) => {
-                console.log(res.data);
                 return res.data as Task;
             })
         } catch (err) {
