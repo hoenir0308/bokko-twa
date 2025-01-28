@@ -27,10 +27,7 @@ export const TaskFormList = memo((props: taskFormListProps) => {
     const [editedTasks, setEditedTasks] = useState<Task[]>([]);
     const [isListChanged, setIsListChanged] = useState<boolean>(false);
 
-    console.log(editedTasks);
-
     const fetchTasks = async (id: string) => {
-        console.log('fetch', initData, goalId);
         if (initData) {
             const initDataStr = new URLSearchParams({
                 query_id: initData.queryId as string,
@@ -65,7 +62,6 @@ export const TaskFormList = memo((props: taskFormListProps) => {
     }, [changeIndex])
 
     function onDragEnd (fromIndex: number, toIndex: number) {
-        console.log('ahahahah');
         const data = [...editedTasks];
         const item = data.splice(fromIndex, 1)[0];
         data.splice(toIndex, 0, item);
@@ -75,8 +71,6 @@ export const TaskFormList = memo((props: taskFormListProps) => {
         } else {
             setIsListChanged(true)
         }
-
-        console.log(data);
     }
 
     const fetchEditTasks = async () => {
@@ -109,15 +103,13 @@ export const TaskFormList = memo((props: taskFormListProps) => {
                 })
 
                 setIsTasksLoading(true);
-                console.log(res);
                 await ApiService.editTasks(res, initDataStr).then((data) => {
-                    console.log(data);
                     const restTasks = [...editedTasks.filter((editedTask) => data.findIndex((dataItem) => dataItem._id === editedTask._id) === -1)]
                     setEditedTasks([...data, ...restTasks]);
                     setTasks([...data, ...restTasks]);
                     setIsListChanged(false)
                 }).finally(() => setIsTasksLoading(false));
-                }
+            }
         }
     }
 
@@ -153,16 +145,16 @@ export const TaskFormList = memo((props: taskFormListProps) => {
                             <TaskFormListLoading/>
                         ) :
                         editedTasks.length > 0 ?
-                        <ReactDragListView nodeSelector='li' handleSelector='svg' onDragEnd={onDragEnd}>
-                            <ul className="flex flex-col gap-1 mt-4">
-                                {editedTasks.map((task) => {
-                                    return (
-                                        <TaskCard task={task} removeTask={removeTask}
-                                                  dateDiff={isDragDate ? dateDiff : undefined}/>
-                                    )
-                                })}
-                            </ul>
-                        </ReactDragListView> :
+                            <ReactDragListView nodeSelector='li' handleSelector='svg' onDragEnd={onDragEnd}>
+                                <ul className="flex flex-col gap-1 mt-4">
+                                    {editedTasks.map((task) => {
+                                        return (
+                                            <TaskCard task={task} removeTask={removeTask}
+                                                      dateDiff={isDragDate ? dateDiff : undefined}/>
+                                        )
+                                    })}
+                                </ul>
+                            </ReactDragListView> :
                             <h2 className="text-md text-neutral-600 mt-2">У этой цели ещё нет задач</h2>
                 }
                 {
