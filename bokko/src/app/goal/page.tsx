@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ApiService } from '@/lib/services/api_service';
@@ -20,8 +19,7 @@ export default function Goals() {
         description: '',
         deadline: new Date(),
     });
-    const [goalId, setGoalId] = useState<string | null>(null); // Изменил тип на null для удобства проверки
-    const [goalCreated, setGoalCreated] = useState<boolean>(false); // Для отображения формы/сообщений
+    const [goalId, setGoalId] = useState<string | null>(null);
     const [isGoalLoading, setIsGoalLoading] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -57,7 +55,7 @@ export default function Goals() {
             await ApiService.createGoal(goal, initDataStr).then((goal_response) => {
                 setGoal({ title: '', description: '', deadline: new Date() });
                 setGoalId(goal_response._id);
-                setGoalCreated(true); // Устанавливаем флаг, что цель создана
+                router.push(`/task/create?goal_id=${goalId}&goal_title=${goal.title}`);
             }).finally(() => setIsGoalLoading(false));
 
         } catch (error) {
@@ -88,48 +86,36 @@ export default function Goals() {
                 </div>
             </div>
             <div className="p-4">
-                {!goalCreated ? ( // Если цель еще не создана, показываем форму
-                    <form onSubmit={handleCreate} className="space-y-4">
-                            <input
-                                placeholder={'Название цели*'}
-                                type="text"
-                                id="title"
-                                name="title"
-                                value={goal.title}
-                                onChange={handleChange}
-                                className="font-[500] border-0 border-b-black border-b w-[100%] pl-6 text-lg"
-                                required
-                            />
-                            <Label htmlFor="description">
-                                <p className="block mb-1 ml-6 mt-4 text-lg text-neutral-400">Описание цели</p>
-                            </Label>
-                            <Textarea
-                                id="description"
-                                name="description"
-                                className="pl-6"
-                                value={goal.description}
-                                onChange={handleChange}
-                                required
-                            />
-                        <Button type="submit" className={`w-full text-lg font-semibold ${isGoalLoading ? 'bg-gray-400' : ''}`} disabled={isGoalLoading}>
-                            {
-                                isGoalLoading ? <Loader /> : 'Создать цель'
-                            }
-                        </Button>
-                    </form>
-                ) : (
-                    <div>
-                        <p className="text-center text-green-600 mb-4">Цель успешно создана!</p>
-                        <div className="mt-4 flex flex-col space-y-2">
-                            {/*<Button onClick={handleAiHelp} className="w-full text-lg font-medium">*/}
-                            {/*    Использовать ИИ*/}
-                            {/*</Button>*/}
-                            <Button variant="secondary" onClick={handleAddTasks} className="w-full text-lg font-medium">
-                                Разделить самостоятельно
-                            </Button>
-                        </div>
-                    </div>
-                )}
+                <form onSubmit={handleCreate} className="space-y-4">
+                    <input
+                        placeholder={'Название цели*'}
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={goal.title}
+                        onChange={handleChange}
+                        className="font-[500] border-0 border-b-black border-b w-[100%] pl-6 text-lg"
+                        required
+                    />
+                    <Label htmlFor="description">
+                        <p className="block mb-1 ml-6 mt-4 text-lg text-neutral-400">Описание цели</p>
+                    </Label>
+                    <Textarea
+                        id="description"
+                        name="description"
+                        className="pl-6"
+                        value={goal.description}
+                        onChange={handleChange}
+                        required
+                    />
+                    <Button type="submit"
+                            className={`w-full text-lg font-semibold ${isGoalLoading ? 'bg-gray-400' : ''}`}
+                            disabled={isGoalLoading}>
+                        {
+                            isGoalLoading ? <Loader/> : 'Создать цель'
+                        }
+                    </Button>
+                </form>
             </div>
         </div>
     );
