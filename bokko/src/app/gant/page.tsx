@@ -2,7 +2,7 @@
 
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ApiService } from '@/lib/services/api_service';
 import type { Goal } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
@@ -12,13 +12,10 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
     DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
-    DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Loader2 } from 'lucide-react';
 
@@ -26,7 +23,6 @@ export default function GanttComponent() {
     const initData = useInitData(true);
     const router = useRouter();
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [goalId, setGoalId] = useState<string>('');
     const [goals, setGoals] = useState<Goal[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [open, setOpen] = useState(false);
@@ -36,26 +32,25 @@ export default function GanttComponent() {
 
     const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
     const fetchTasks  =   async (goalId: string | null, initData : string) => {
-         await ApiService.getTasks(initData, goalId).then((data: Task[]) => {
-           setTasks(
-               data.map((task: any) => ({
-                   id: task._id!,
-                   name: task.title,
-                   start: new Date(task.create_date || task.deadline),
-                   end: new Date(task.end_date || task.deadline),
-                   progress: task.complite ? 100 : 0,
-                   type: 'task',
-               }))
-           );
-       }).finally(() => {
-              setLoading(false);
-       });
+        await ApiService.getTasks(initData, goalId).then((data: Task[]) => {
+            setTasks(
+                data.map((task: any) => ({
+                    id: task._id!,
+                    name: task.title,
+                    start: new Date(task.create_date || task.deadline),
+                    end: new Date(task.end_date || task.deadline),
+                    progress: task.complite ? 100 : 0,
+                    type: 'task',
+                }))
+            );
+        }).finally(() => {
+            setLoading(false);
+        });
 
     }
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(initData);
             setLoading(true);
             if (!initData) return;
             const initDataStr = new URLSearchParams({
@@ -74,9 +69,9 @@ export default function GanttComponent() {
             }).toString();
             setInitDataBlyat(initDataStr);
             try {
-               await ApiService.getGoals(initDataStr).then((data: Goal[]) => {
+                await ApiService.getGoals(initDataStr).then((data: Goal[]) => {
                     setGoals(data);
-                   fetchTasks( data[0]._id!, initDataStr);
+                    fetchTasks( data[0]._id!, initDataStr);
 
                 });
 
@@ -92,7 +87,7 @@ export default function GanttComponent() {
         const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [goalId, initData]);
+    }, [initData]);
 
     const handleGoalChange = (value: string) => {
         fetchTasks(value, initDataBlyat);
