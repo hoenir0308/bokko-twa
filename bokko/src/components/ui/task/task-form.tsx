@@ -9,7 +9,7 @@ import {useRouter} from "next/navigation";
 import type {Task} from "@/lib/types";
 import {ApiService, IEditTask} from "@/lib/services/api_service";
 import './timepicker.css';
-import {Loader} from "@/components/ui/Loader/Loader";
+import {Loader} from "lucide-react";
 import {addDays} from "@/lib/helpers/addDays";
 import {getRuDayByNum} from "@/lib/helpers/getRuDayByNum";
 import {TaskFormList} from "@/components/ui/task/task-form-list";

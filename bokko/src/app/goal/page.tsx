@@ -9,7 +9,7 @@ import { useInitData } from '@telegram-apps/sdk-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
-import {Loader} from "@/components/ui/Loader/Loader";
+import {Loader} from "lucide-react";
 
 export default function Goals() {
     const initData = useInitData(true);
