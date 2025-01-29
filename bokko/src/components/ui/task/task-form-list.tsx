@@ -5,7 +5,7 @@ import {Task} from "@/lib/types";
 import {ApiService, IEditTask} from "@/lib/services/api_service";
 import {useInitData} from "@telegram-apps/sdk-react";
 import {Button} from "@/components/ui/button";
-import {Loader} from "@/components/ui/Loader/Loader";
+import {Loader} from "lucide-react";
 import {getRuDayByNum} from "@/lib/helpers/getRuDayByNum";
 import {TaskFormListLoading} from "@/components/ui/task/skeletons/task-form-list-loading";
 

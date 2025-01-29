@@ -3,7 +3,7 @@ import {Task} from "@/lib/types";
 import {ApiService} from "@/lib/services/api_service";
 import {useInitData} from "@telegram-apps/sdk-react";
 import {addDays} from "@/lib/helpers/addDays";
-import {Loader} from "@/components/ui/Loader/Loader";
+import {Loader} from "lucide-react";
 
 interface TaskCardProps {
   task: Task;

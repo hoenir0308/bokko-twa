@@ -13,7 +13,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 import "react-datepicker/dist/react-datepicker.css";
 import '../../components/ui/task/timepicker.css'
 import 'react-time-picker/dist/TimePicker.css';
-import {Loader} from "@/components/ui/Loader/Loader";
+import {Loader} from "lucide-react";
 
 function TaskContent() {
     const initData = useInitData();
