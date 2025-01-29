@@ -2,8 +2,7 @@ import axios from "axios"
 
 const getInstance = () => {
     return axios.create({
-        baseURL: "https://bokko.grabitkorovany.org/",
-        // baseURL: "https://bokko.grabitkorovany.org/
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
         timeout: 100000
     });
 }
