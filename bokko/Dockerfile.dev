@@ -1,0 +1,9 @@
+FROM node:lts AS dependencies
+WORKDIR /app
+COPY . .
+RUN npm install --frozen-lockfile
+
+ENV NEXT_PUBLIC_API_BASE_URL 'https://api.benchmarkvc.ru/'
+
+EXPOSE 3000
+CMD ["npm", "run", "dev"]

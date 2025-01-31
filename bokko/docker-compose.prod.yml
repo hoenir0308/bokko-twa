@@ -1,0 +1,17 @@
+services:
+  app:
+    container_name: bokko-twa
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    networks:
+      bokko_web_network:
+        ipv4_address: 172.27.0.2
+
+networks:
+  bokko_web_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16
+          gateway: 172.27.0.1
