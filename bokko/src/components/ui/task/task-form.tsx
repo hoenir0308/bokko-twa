@@ -93,6 +93,7 @@ export const TaskForm = memo((props:  Props) => {
             if (!id) return;
             await ApiService.editTasks([{
                 task_id: id,
+                // @ts-ignore
                 updates: {...task, end_date: startDate, deadline: new Date(task.deadline), create_date: new Date(task.create_date)},
             }], initDataStr).then(async () => {
                 await onFulfilledTask(initDataStr, isNext, editTask?._id)
