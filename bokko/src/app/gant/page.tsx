@@ -32,7 +32,7 @@ export default function GanttComponent() {
 
     const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
     const fetchTasks  =   async (goalId: string | null, initData : string) => {
-        await ApiService.getTasks(initData, goalId).then((data: Task[]) => {
+        await ApiService.getTasks(initData, goalId).then((data]) => {
             setTasks(
                 data.map((task: any) => ({
                     id: task._id!,
