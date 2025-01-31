@@ -74,8 +74,8 @@ function TaskContent() {
             setError(null);
             console.log(id);
             await ApiService.getTask(id, initDataStr).then((data) => {
-                console.log(new Date(data));
                 setDeadline(new Date(data.deadline));
+                // @ts-ignore
                 setEndDate(new Date(data.end_date));
                 setTask(data);
             }).catch(() => {
