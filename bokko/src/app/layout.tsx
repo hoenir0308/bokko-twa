@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+// @ts-ignore
 import cls from './globals.css';
 import { ClientSdkProvider } from '@/lib/clientsdkprovider';
 
