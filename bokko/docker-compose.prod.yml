@@ -3,7 +3,7 @@ services:
     container_name: bokko-twa
     build:
       context: ./
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     networks:
       bokko_web_network:
         ipv4_address: 172.27.0.2
