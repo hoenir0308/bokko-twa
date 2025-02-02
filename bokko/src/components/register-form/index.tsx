@@ -6,12 +6,14 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import {Loader} from "lucide-react";
 
 const RegisterForm: React.FC = () => {
     const initData = useInitData(true);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [post, setPost] = useState('');
+        const [isRegistration, setIsRegistration] = useState<boolean>(false);
     const [age, setAge] = useState<number | null>(null);
     const [gender, setGender] = useState('');
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -72,7 +74,8 @@ const RegisterForm: React.FC = () => {
                     allows_write_to_pm: initData.user?.allowsWriteToPm,
                 }),
             }).toString();
-            await ApiService.reg(user, initDataStr);
+            setIsRegistration(true);
+            await ApiService.reg(user, initDataStr).finally(() => setIsRegistration(false));
             window.location.reload();
         },
         [firstName, lastName, post, age, gender, initData]
@@ -163,7 +166,9 @@ const RegisterForm: React.FC = () => {
                     )}
                 </div>
                 <Button type="submit" className="w-full">
-                    Ввести
+                    {
+                        isRegistration ? <Loader /> : 'Ввести'
+                    }
                 </Button>
             </form>
         </div>
