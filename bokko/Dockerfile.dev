@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN npm install --frozen-lockfile
 
-ENV NEXT_PUBLIC_API_BASE_URL 'https://api.benchmarkvc.ru/'
+ENV NEXT_PUBLIC_API_BASE_URL 'https://bokko.grabitkorovany.org/'
 
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
