@@ -1,4 +1,4 @@
-        import { ApiService } from '@/lib/services/api_service';
+import { ApiService } from '@/lib/services/api_service';
 import { User } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -12,10 +12,10 @@ const RegisterForm: React.FC = () => {
     const initData = useInitData(true);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [post, setPost] = useState('');
-        const [isRegistration, setIsRegistration] = useState<boolean>(false);
-    const [age, setAge] = useState<number | null>(null);
-    const [gender, setGender] = useState('');
+    // const [post, setPost] = useState('');
+    const [isRegistration, setIsRegistration] = useState<boolean>(false);
+    // const [age, setAge] = useState<number | null>(null);
+    // const [gender, setGender] = useState('');
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
@@ -34,18 +34,18 @@ const RegisterForm: React.FC = () => {
             if (!firstName) {
                 errors.firstName = 'Поле имени обязательно';
             }
-            if (!lastName) {
-                errors.lastName = 'Поле фамилии обязательно';
-            }
-            if (!post) {
-                errors.post = 'Поле должности обязательно';
-            }
-            if (!age || age < 1) {
-                errors.age = 'Поле возраста обязательно';
-            }
-            if (!gender) {
-                errors.gender = 'Поле пола обязательно';
-            }
+            // if (!lastName) {
+            //     errors.lastName = 'Поле фамилии обязательно';
+            // }
+            // if (!post) {
+            //     errors.post = 'Поле должности обязательно';
+            // }
+            // if (!age || age < 1) {
+            //     errors.age = 'Поле возраста обязательно';
+            // }
+            // if (!gender) {
+            //     errors.gender = 'Поле пола обязательно';
+            // }
 
             if (Object.keys(errors).length > 0) {
                 setFormErrors(errors);
@@ -54,10 +54,10 @@ const RegisterForm: React.FC = () => {
 
             const user: User = {
                 first_name: firstName,
-                last_name: lastName,
-                post,
-                age ,
-                gender,
+                last_name: 'user',
+                age: 20,
+                gender: 'M',
+                post: 'developer',
                 tg_id: initData.user?.id,
             };
             const initDataStr = new URLSearchParams({
@@ -78,7 +78,7 @@ const RegisterForm: React.FC = () => {
             await ApiService.reg(user, initDataStr).finally(() => setIsRegistration(false));
             window.location.reload();
         },
-        [firstName, lastName, post, age, gender, initData]
+        [firstName, initData]
     );
 
     return (
@@ -104,67 +104,67 @@ const RegisterForm: React.FC = () => {
                         </Alert>
                     )}
                 </div>
-                <div className="space-y-4">
-                    <div>
-                        <Label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                            Фамилия
-                        </Label>
-                        <Input
-                            type="text"
-                            id="lastName"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                        />
-                    </div>
-                    {formErrors.lastName && (
-                        <Alert variant="destructive">
-                            <AlertTitle>Ошибка</AlertTitle>
-                            <AlertDescription>{formErrors.lastName}</AlertDescription>
-                        </Alert>
-                    )}
-                </div>
-                <div className="space-y-4">
-                    <div>
-                        <Label htmlFor="post" className="block text-sm font-medium text-gray-700">
-                            Должность
-                        </Label>
-                        <Input type="text" id="post" value={post} onChange={(e) => setPost(e.target.value)} />
-                    </div>
-                    {formErrors.post && (
-                        <Alert variant="destructive">
-                            <AlertTitle>Ошибка</AlertTitle>
-                            <AlertDescription>{formErrors.post}</AlertDescription>
-                        </Alert>
-                    )}
-                </div>
-                <div className="space-y-4">
-                    <div>
-                        <Label htmlFor="age" className="block text-sm font-medium text-gray-700">
-                            Возраст
-                        </Label>
-                        <Input type="number" id="age" value={age!} onChange={(e) => setAge(Number(e.target.value))} />
-                    </div>
-                    {formErrors.age && (
-                        <Alert variant="destructive">
-                            <AlertTitle>Ошибка</AlertTitle>
-                            <AlertDescription>{formErrors.age}</AlertDescription>
-                        </Alert>
-                    )}
-                </div>
-                <div className="space-y-4">
-                    <div>
-                        <Label htmlFor="gender" className="block text-sm font-medium text-gray-700">
-                            Пол
-                        </Label>
-                        <Input type="text" id="gender" value={gender} onChange={(e) => setGender(e.target.value)} />
-                    </div>
-                    {formErrors.gender && (
-                        <Alert variant="destructive">
-                            <AlertTitle>Ошибка</AlertTitle>
-                            <AlertDescription>{formErrors.gender}</AlertDescription>
-                        </Alert>
-                    )}
-                </div>
+                {/*<div className="space-y-4">*/}
+                {/*    <div>*/}
+                {/*        <Label htmlFor="lastName" className="block text-sm font-medium text-gray-700">*/}
+                {/*            Фамилия*/}
+                {/*        </Label>*/}
+                {/*        <Input*/}
+                {/*            type="text"*/}
+                {/*            id="lastName"*/}
+                {/*            value={lastName}*/}
+                {/*            onChange={(e) => setLastName(e.target.value)}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*    {formErrors.lastName && (*/}
+                {/*        <Alert variant="destructive">*/}
+                {/*            <AlertTitle>Ошибка</AlertTitle>*/}
+                {/*            <AlertDescription>{formErrors.lastName}</AlertDescription>*/}
+                {/*        </Alert>*/}
+                {/*    )}*/}
+                {/*</div>*/}
+                {/*<div className="space-y-4">*/}
+                {/*    <div>*/}
+                {/*        <Label htmlFor="post" className="block text-sm font-medium text-gray-700">*/}
+                {/*            Должность*/}
+                {/*        </Label>*/}
+                {/*        <Input type="text" id="post" value={post} onChange={(e) => setPost(e.target.value)} />*/}
+                {/*    </div>*/}
+                {/*    {formErrors.post && (*/}
+                {/*        <Alert variant="destructive">*/}
+                {/*            <AlertTitle>Ошибка</AlertTitle>*/}
+                {/*            <AlertDescription>{formErrors.post}</AlertDescription>*/}
+                {/*        </Alert>*/}
+                {/*    )}*/}
+                {/*</div>*/}
+                {/*<div className="space-y-4">*/}
+                {/*    <div>*/}
+                {/*        <Label htmlFor="age" className="block text-sm font-medium text-gray-700">*/}
+                {/*            Возраст*/}
+                {/*        </Label>*/}
+                {/*        <Input type="number" id="age" value={age!} onChange={(e) => setAge(Number(e.target.value))} />*/}
+                {/*    </div>*/}
+                {/*    {formErrors.age && (*/}
+                {/*        <Alert variant="destructive">*/}
+                {/*            <AlertTitle>Ошибка</AlertTitle>*/}
+                {/*            <AlertDescription>{formErrors.age}</AlertDescription>*/}
+                {/*        </Alert>*/}
+                {/*    )}*/}
+                {/*</div>*/}
+                {/*<div className="space-y-4">*/}
+                {/*    <div>*/}
+                {/*        <Label htmlFor="gender" className="block text-sm font-medium text-gray-700">*/}
+                {/*            Пол*/}
+                {/*        </Label>*/}
+                {/*        <Input type="text" id="gender" value={gender} onChange={(e) => setGender(e.target.value)} />*/}
+                {/*    </div>*/}
+                {/*    {formErrors.gender && (*/}
+                {/*        <Alert variant="destructive">*/}
+                {/*            <AlertTitle>Ошибка</AlertTitle>*/}
+                {/*            <AlertDescription>{formErrors.gender}</AlertDescription>*/}
+                {/*        </Alert>*/}
+                {/*    )}*/}
+                {/*</div>*/}
                 <Button type="submit" className="w-full">
                     {
                         isRegistration ? <Loader /> : 'Ввести'
