@@ -172,7 +172,7 @@ const RegisterForm: React.FC = () => {
                         isRegistration ? <Loader /> : 'Ввести'
                     }
                 </Button>
-                <h1 className="text-2xl font-bold mb-4">{error}</h1>
+                <h1 className="text-2xl font-bold mb-4">{error ? error : ''}</h1>
             </form>
         </div>
     );
