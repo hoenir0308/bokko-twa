@@ -17,6 +17,7 @@ const RegisterForm: React.FC = () => {
     // const [age, setAge] = useState<number | null>(null);
     // const [gender, setGender] = useState('');
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+    const [error, setError] = useState<null | string>(null);
 
     useEffect(() => {
         if (!initData) return;
@@ -75,7 +76,8 @@ const RegisterForm: React.FC = () => {
                 }),
             }).toString();
             setIsRegistration(true);
-            await ApiService.reg(user, initDataStr).finally(() => setIsRegistration(false));
+            setError(null);
+            await ApiService.reg(user, initDataStr).finally(() => setIsRegistration(false)).catch((e) => setError(e));
             window.location.reload();
         },
         [firstName, initData]
@@ -170,6 +172,7 @@ const RegisterForm: React.FC = () => {
                         isRegistration ? <Loader /> : 'Ввести'
                     }
                 </Button>
+                <h1 className="text-2xl font-bold mb-4">{error}</h1>
             </form>
         </div>
     );
