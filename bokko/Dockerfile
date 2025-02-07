@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --frozen-lockfile
 
-FROM node:lts AS builder  # исправлено (было 'bui')
+FROM node:lts AS builder
 WORKDIR /app
 
 ARG NEXT_PUBLIC_API_BASE_URL
