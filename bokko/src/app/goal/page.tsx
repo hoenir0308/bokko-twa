@@ -6,10 +6,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { ApiService } from '@/lib/services/api_service';
 import { Goal } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import {useRouter} from 'next/navigation';
+import {useState} from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
-import {Loader} from "lucide-react";
+import {Loader} from "@/components/ui/Loader/Loader";
 
 export default function Goals() {
     const initData = useInitData(true);
@@ -19,7 +19,6 @@ export default function Goals() {
         description: '',
         deadline: new Date(),
     });
-    const [goalId, setGoalId] = useState<string | null>(null);
     const [isGoalLoading, setIsGoalLoading] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -54,8 +53,7 @@ export default function Goals() {
             setIsGoalLoading(true);
             await ApiService.createGoal(goal, initDataStr).then((goal_response) => {
                 setGoal({ title: '', description: '', deadline: new Date() });
-                setGoalId(goal_response._id);
-                router.push(`/task/create?goal_id=${goalId}&goal_title=${goal.title}`);
+                router.push(`/task/create?goal_id=${goal_response._id}&goal_title=${goal.title}`);
             }).finally(() => setIsGoalLoading(false));
 
         } catch (error) {
@@ -67,13 +65,13 @@ export default function Goals() {
         router.back();
     };
 
-    const handleAddTasks = () => {
-        router.push(`/task/create?goal_id=${goalId}&goal_title=${goal.title}`);
-    };
-
-    const handleAiHelp = async () => {
-        router.push(`/ai?goal_id=${goalId}`);
-    };
+    // const handleAddTasks = () => {
+    //     router.push(`/task/create?goal_id=${goalId}&goal_title=${goal.title}`);
+    // };
+    //
+    // const handleAiHelp = async () => {
+    //     router.push(`/ai?goal_id=${goalId}`);
+    // };
 
     return (
         <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
