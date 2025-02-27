@@ -5,7 +5,6 @@ import Goals from '@/components/ui/goal';
 import { ApiService } from '@/lib/services/api_service';
 import { User } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {Loader2} from "lucide-react";
