@@ -16,6 +16,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import 'react-time-picker/dist/TimePicker.css';
 import {TaskForm} from "@/components/ui/task/task-form";
 import {Loader2} from "lucide-react";
+import {Header} from "@/components/ui/header";
 
 function TaskCreate() {
     const initData = useInitData(true);
@@ -40,14 +41,7 @@ function TaskCreate() {
     };
         return (
             <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
-                <div className="bg-secondary">
-                    <div className="max-w-[97%] flex items-center py-4 mx-auto">
-                        <Button onClick={handleGoBack} className="text-lg font-semibold" size="icon" variant="ghost">
-                            <FaChevronLeft color="white" />
-                        </Button>
-                        <h2 className="text-lg text-white font-semibold">Добавить задачу</h2>
-                    </div>
-                </div>
+                <Header title={'Добавить задачу'} />
                 <div className="w-full p-4 text-black rounded-md shadow-md">
                     <TaskForm isEdit={false} goal_id={goalId} goalTitle={goalTitle}  />
                 </div>
