@@ -2,7 +2,7 @@
 
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ApiService } from '@/lib/services/api_service';
 import type { Goal } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
@@ -18,6 +18,7 @@ import {
     DrawerTitle,
 } from '@/components/ui/drawer';
 import { Loader2 } from 'lucide-react';
+import {Header} from "@/components/ui/header";
 
 export default function GanttComponent() {
     const initData = useInitData(true);
@@ -99,14 +100,7 @@ export default function GanttComponent() {
 
     return (
         <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
-            <div className="mb-4 bg-secondary">
-                <div className="max-w-[97%] flex items-center py-4 mx-auto">
-                    <Button onClick={handleGoBack} className="text-lg font-semibold" size="icon" variant="ghost">
-                        <FaChevronLeft color="white" />
-                    </Button>
-                    <h2 className="text-lg text-white font-semibold">Диаграмма Ганта</h2>
-                </div>
-            </div>
+            <Header title={'Диаграмма Ганта'} />
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center h-full">
