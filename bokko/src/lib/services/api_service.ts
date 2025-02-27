@@ -183,7 +183,7 @@ export const ApiService = {
     },
     async deleteTask(task_id: string, auth: string) {
         try {
-            return await instance.delete(`/task?task_id=${task_id}`,
+            return await instance.delete(`/task/?task_id=${task_id}`,
                 {
                     headers: {
                         Authorization: `twa ${auth}`
