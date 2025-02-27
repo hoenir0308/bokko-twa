@@ -113,9 +113,10 @@ export const TaskFormList = memo((props: taskFormListProps) => {
         }
     }
 
-    const removeTask = useCallback(() => (id: string) => {
+    const removeTask = useCallback((id: string) => {
         setTasks(prev => prev.filter((task) => task._id !== id))
-    }, [])
+        setEditedTasks(prev => prev.filter((task) => task._id !== id))
+    }, [setTasks])
 
     useEffect(() => {
         fetchTasks(goalId!);
@@ -149,8 +150,12 @@ export const TaskFormList = memo((props: taskFormListProps) => {
                                 <ul className="flex flex-col gap-1 mt-4">
                                     {editedTasks.map((task) => {
                                         return (
-                                            <TaskCard task={task} removeTask={removeTask}
-                                                      dateDiff={isDragDate ? dateDiff : undefined}/>
+                                            <TaskCard
+                                                key={task._id}
+                                                task={task}
+                                                removeTask={removeTask}
+                                                dateDiff={isDragDate ? dateDiff : undefined}
+                                            />
                                         )
                                     })}
                                 </ul>
