@@ -7,9 +7,10 @@ import { ApiService } from '@/lib/services/api_service';
 import { Goal } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import {useRouter} from 'next/navigation';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import {Loader} from "@/components/ui/Loader/Loader";
+import {Header} from "@/components/ui/header";
 
 export default function Goals() {
     const initData = useInitData(true);
@@ -75,14 +76,7 @@ export default function Goals() {
 
     return (
         <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
-            <div className="bg-secondary">
-                <div className="max-w-[97%] flex items-center py-4 mx-auto">
-                    <Button onClick={handleGoBack} className="text-lg font-semibold" size="icon" variant="ghost">
-                        <FaChevronLeft color="white" />
-                    </Button>
-                    <h2 className="text-lg text-white font-semibold">Создать цель</h2>
-                </div>
-            </div>
+            <Header title={'Создать цель'} />
             <div className="p-4">
                 <form onSubmit={handleCreate} className="space-y-4">
                     <input
