@@ -7,7 +7,8 @@ import { Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
-import ReactMarkdown from 'react-markdown'; // Поддержка Markdown
+import ReactMarkdown from 'react-markdown';
+import {Header} from "@/components/ui/header"; // Поддержка Markdown
 
 function AiContent() {
     const initData = useInitData(true);
@@ -59,14 +60,7 @@ function AiContent() {
 
     return (
         <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
-            <div className="bg-secondary">
-                <div className="max-w-[97%] flex items-center py-4 mx-auto">
-                    <Button onClick={handleGoBack} className="text-lg font-semibold" size="icon" variant="ghost">
-                        <FaChevronLeft color="white" />
-                    </Button>
-                    <h2 className="text-lg text-white font-semibold">Помощь с ИИ</h2>
-                </div>
-            </div>
+            <Header title={'Помощь с ИИ'} />
             <div className="p-4 w-full">
                 {loading ? (
                     <div className="flex justify-center items-center h-screen">
