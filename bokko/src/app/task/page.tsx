@@ -1,15 +1,14 @@
 'use client';
 
-
 import { ApiService } from '@/lib/services/api_service';
-import type { Task, Goal } from '@/lib/types';
+import type { Task } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { useSearchParams } from 'next/navigation';
-import React, {MutableRefObject, useCallback, useRef} from 'react';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { FaChevronLeft } from 'react-icons/fa';
+import {FaChevronLeft, FaHome} from 'react-icons/fa';
 import "react-datepicker/dist/react-datepicker.css";
 import '../../components/ui/task/timepicker.css'
 import 'react-time-picker/dist/TimePicker.css';
@@ -148,10 +147,17 @@ function TaskContent() {
 
     if (!task) return null;
 
+    const handleHome = () => {
+        router.push('/');
+    };
+
     return (
         <div className="max-h-max max-w-md mx-auto relative flex flex-col h-screen">
             <div className="bg-secondary">
             <div className="max-w-[97%] flex items-center py-4 mx-auto">
+                <Button onClick={handleHome} className="text-lg font-semibold" size="icon" variant="ghost">
+                    <FaHome color="white"/>
+                </Button>
                     <Button onClick={handleGoBack} className="text-lg font-semibold" size="icon" variant="ghost">
                         <FaChevronLeft color="white" />
                     </Button>
