@@ -27,7 +27,7 @@ function TaskContent() {
     const [error, setError] = useState<string | null>(null);
     const [deadline, setDeadline] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
-    console.log(task?.end_date)
+
     useEffect(() => {
         const id1 = params.get('task_id');
         const id2 = params.get('goal_id');
