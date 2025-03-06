@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 // @ts-ignore
 import cls from './globals.css';
 import { ClientSdkProvider } from '@/lib/clientsdkprovider';
+import Script from "next/script";
 
 const ManropeLight = localFont({
     src: './../../public/fonts/Manrope/Manrope-Light.woff2',
@@ -47,7 +48,7 @@ export default function RootLayout({
     console.log('root');
     return (
         <html lang="en">
-            <body className={`
+        <body className={`
             ${ManropeLight.variable} 
             ${ManropeRegular.variable} 
             ${ManropeMedium.variable} 
@@ -55,8 +56,12 @@ export default function RootLayout({
             ${ManropeBold.variable} 
             ${cls}
             antialiased`}>
-                <ClientSdkProvider>{children}</ClientSdkProvider>
-            </body>
+        <script
+            src="https://drag-drop-touch-js.github.io/dragdroptouch/dist/drag-drop-touch.esm.min.js"
+            type="module"
+        ></script>
+        <ClientSdkProvider>{children}</ClientSdkProvider>
+        </body>
         </html>
     );
 }
