@@ -29,6 +29,15 @@
     border-color: currentcolor transparent transparent;
 }
 
+.black div {
+    color: black;
+}
+
+.small {
+    width: 60px;
+    height: 60px;
+}
+
 .lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
 }
