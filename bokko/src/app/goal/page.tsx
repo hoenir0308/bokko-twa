@@ -8,7 +8,6 @@ import { Goal } from '@/lib/types';
 import { useInitData } from '@telegram-apps/sdk-react';
 import {useRouter} from 'next/navigation';
 import React, {useState} from 'react';
-import { FaChevronLeft } from 'react-icons/fa';
 import {Loader} from "@/components/ui/Loader/Loader";
 import {Header} from "@/components/ui/header";
 
@@ -55,8 +54,7 @@ export default function Goals() {
             await ApiService.createGoal(goal, initDataStr).then((goal_response) => {
                 setGoal({ title: '', description: '', deadline: new Date() });
                 router.push(`/task/create?goal_id=${goal_response._id}&goal_title=${goal.title}`);
-            }).finally(() => setIsGoalLoading(false));
-
+            }).catch(() => setIsGoalLoading(false));
         } catch (error) {
             console.error('Failed to create goal:', error);
         }
@@ -90,7 +88,7 @@ export default function Goals() {
                         required
                     />
                     <Label htmlFor="description">
-                        <p className="block mb-1 ml-6 mt-4 text-lg text-neutral-400">Описание цели</p>
+                        <p className="block ml-6 mt-6 -mb-2 text-lg text-neutral-700">Описание цели</p>
                     </Label>
                     <Textarea
                         id="description"
