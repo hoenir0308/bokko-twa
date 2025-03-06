@@ -69,6 +69,10 @@ const Goals: React.FC = () => {
         router.push('/calendar');
     };
 
+    const filterGoals = useCallback((goal_id: string) => {
+        setGoals(prev => prev.filter((goal) => goal._id !== goal_id))
+    }, [])
+
     const renderGoalsList = () => {
         if (isGoalsLoading) {
             return (
@@ -100,6 +104,7 @@ const Goals: React.FC = () => {
                         setSelectedGoalId={setSelectedGoalId}
                         isTaskOpened={selectedGoalId === goal._id}
                         createInitDataString={createInitDataString}
+                        filterGoals={filterGoals}
                     />
                 ))}
             </ul>
@@ -131,9 +136,10 @@ interface GoalItemProps {
     createInitDataString: () => string;
     isTaskOpened: boolean;
     setSelectedGoalId: (id: string | null) => void;
+    filterGoals: (id: string) => void;
 }
 
-const GoalItem: React.FC<GoalItemProps> = React.memo(({ goal, createInitDataString, isTaskOpened, setSelectedGoalId }) => {
+const GoalItem: React.FC<GoalItemProps> = React.memo(({ goal, createInitDataString, isTaskOpened, setSelectedGoalId, filterGoals }) => {
     const onGoalClick = () => {
         if (isTaskOpened) {
             setSelectedGoalId(null);
@@ -147,7 +153,7 @@ const GoalItem: React.FC<GoalItemProps> = React.memo(({ goal, createInitDataStri
         <li
             className="py-1 cursor-pointer transition"
         >
-            <GoalHeader onClick={onGoalClick} title={goal.title} isTaskOpened={isTaskOpened}  completePercent={goal.complete ? goal.complete : 0} />
+            <GoalHeader onClick={onGoalClick} title={goal.title} goalId={goal._id} filterGoals={filterGoals} isTaskOpened={isTaskOpened}  completePercent={goal.complete ? goal.complete : 0} />
             <TasksList isTaskOpened={isTaskOpened} createInitDataString={createInitDataString} id={goal._id} goalTitle={goal.title} />
         </li>
     );
