@@ -52,7 +52,7 @@ export const TaskCard = memo(({task, removeTask, dateDiff = 0}: TaskCardProps) =
     }, [initData])
 
     return (
-        <li className="pt-1 pr-3 pb-1 bg-neutral-200 flex justify-between hover:bg-secondary rounded-" key={task._id}>
+        <li className="pt-2 pr-3 pb-2 bg-neutral-200 flex justify-between hover:bg-secondary cursor-pointer items-center rounded-sm" key={task._id}>
             <p className="text-black ml-2 truncate">
                 {task.title}
             </p>
