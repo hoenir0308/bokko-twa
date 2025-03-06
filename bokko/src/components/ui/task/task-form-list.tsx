@@ -8,6 +8,7 @@ import {Button} from "@/components/ui/button";
 import {Loader} from "lucide-react";
 import {getRuDayByNum} from "@/lib/helpers/getRuDayByNum";
 import {TaskFormListLoading} from "@/components/ui/task/skeletons/task-form-list-loading";
+import Script from "next/script";
 
 interface taskFormListProps {
     goalTitle: string;
@@ -122,9 +123,10 @@ export const TaskFormList = memo((props: taskFormListProps) => {
         fetchTasks(goalId!);
     }, [goalId, initData])
 
-
     return (
         <>
+            <Script id="DragDropTouch"
+                    src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js" />
             {
                 (dateDiff > 0) && (
                     <div className="flex justify-start gap-4 pl-6 pr-6 mt-4">
@@ -140,14 +142,14 @@ export const TaskFormList = memo((props: taskFormListProps) => {
                 )
             }
             <div className="pl-6 pr-8">
-                <h2 className="block mt-6 text-lg text-black">Задачи к цели <u>{goalTitle ? goalTitle : ''}</u></h2>
+                <h2 className="block mt-6 text-lg text-black">Задачи к цели <strong>{goalTitle ? goalTitle : ''}</strong></h2>
                 {
                     isTasksLoading ? (
                             <TaskFormListLoading/>
                         ) :
                         editedTasks.length > 0 ?
-                            <ReactDragListView nodeSelector='li' handleSelector='svg' onDragEnd={onDragEnd}>
-                                <ul className="flex flex-col gap-1 mt-4">
+                            <ReactDragListView nodeSelector='li' handleSelector='li' onDragEnd={onDragEnd}>
+                                <ul className="flex flex-col gap-2 mt-4">
                                     {editedTasks.map((task) => {
                                         return (
                                             <TaskCard
@@ -172,7 +174,7 @@ export const TaskFormList = memo((props: taskFormListProps) => {
                                 className={`w-full font-semibold text-lg py-2 mt-4 flex-grow-2 text-md ${isTasksLoading ? 'bg-gray-400' : ''}`}
                             >
                                 {
-                                    isTasksLoading ? <Loader /> : 'Изменить порядок'
+                                    isTasksLoading ? <Loader/> : 'Изменить порядок'
                                 }
                             </Button>
                             <Button
@@ -184,7 +186,7 @@ export const TaskFormList = memo((props: taskFormListProps) => {
                                 className={`w-full font-semibold text-lg flex-grow-1 py-4 mt-4 text-md ${isTasksLoading ? 'bg-gray-400' : ''}`}
                             >
                                 {
-                                    isTasksLoading ? <Loader /> : 'Отменить'
+                                    isTasksLoading ? <Loader/> : 'Отменить'
                                 }
                             </Button>
                         </div>
