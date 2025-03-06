@@ -132,7 +132,7 @@ export const TaskForm = memo((props:  Props) => {
                     setChangeIndex(prev => prev + 1)
                     router.push(`/task/create?goal_title=${goalTitle}&goal_id=${goal_id}`)
                 }
-                router.push(`/task?goal_title=${goalTitle}&goal_id=${goal_id}&task_id=${new_task_id}`)
+                router.push(`/`)
             })
         } else {
             if (isNext) {
@@ -147,7 +147,7 @@ export const TaskForm = memo((props:  Props) => {
                 setChangeIndex(prev => prev + 1)
                 router.push(`/task/create?goal_title=${goalTitle}&goal_id=${goal_id}`)
             } else {
-                router.push(`/task?goal_title=${goalTitle}&goal_id=${goal_id}&task_id=${new_task_id}`)
+                router.push(`/`)
             }
         }
     }
@@ -191,6 +191,7 @@ export const TaskForm = memo((props:  Props) => {
 
     return (
         <form>
+            <script src="drag-drop-touch.esm.min.js?autoload" type="module"></script>
             <input
                 placeholder={'Название задачи*'}
                 type="text"
@@ -202,7 +203,7 @@ export const TaskForm = memo((props:  Props) => {
                 required
             />
             <Label htmlFor="description">
-                <p className="block mb-1 ml-6 text-lg text-neutral-400">Описание задачи</p>
+                <p className="block ml-6 mt-1 text-lg text-neutral-700">Описание задачи</p>
             </Label>
             <Textarea
                 id="description"
@@ -230,7 +231,7 @@ export const TaskForm = memo((props:  Props) => {
                 ))}
             </div>
             <Label htmlFor="deadline-picker">
-                <p className="block text-lg text-black mt-6 mb-3 ml-6">Назначить дедлайн</p>
+                <p className="block text-lg text-black mt-6 mb-3 ml-6">Назначить дедлайн <u>(крайний срок)</u></p>
             </Label>
             <div className="flex justify-between">
                 <DatePicker
@@ -276,7 +277,8 @@ export const TaskForm = memo((props:  Props) => {
                 <p>
                     Напомнить за
                 </p>
-                <input placeholder={'--'} onChange={(e) => setPushValue(e.target.value)} type="number" className="border-black border rounded-sm text-center w-12 h-6"
+                <input placeholder={'--'} onChange={(e) => setPushValue(e.target.value)} type="number"
+                       className="border-black border rounded-sm text-center w-12 h-6"
                        value={pushValue}/>
                 <select className="border-black text-center border rounded-sm w-24 h-6">
                     <option>
@@ -289,37 +291,9 @@ export const TaskForm = memo((props:  Props) => {
             </div>
             <Button
                 disabled={isLoading}
-                onClick={() => onSubmit(task_id)}
+                onClick={() => onSubmit(task_id, true)}
                 className={`w-full gap-4 font-semibold text-lg py-4 mt-4 ${isLoading ? 'bg-gray-400' : ''}`}
                 type="button"
-            >
-                {
-                    isLoading ? <Loader/> : <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clip-path="url(#clip0_20_2)">
-                            <path
-                                d="M23.3156 4.96875C23.0625 5.01562 22.6406 5.15625 22.3781 5.2875C22.0875 5.4375 17.5031 9.1875 11.0156 14.6062C-0.440626 24.1594 -0.121876 23.8687 0.0281241 24.4875C0.0656241 24.6094 0.571874 25.2844 1.17187 25.9875C2.07187 27.0562 2.30625 27.2812 2.56875 27.3375C2.74687 27.3656 2.98125 27.3656 3.08437 27.3281C3.1875 27.3 7.93125 23.3906 13.6125 18.6562C19.3031 13.9125 23.9719 10.0312 24 10.0312C24.0281 10.0312 28.6969 13.9125 34.3875 18.6562C40.0688 23.3906 44.8125 27.3 44.9156 27.3281C45.0188 27.3656 45.2531 27.3656 45.4313 27.3375C45.6938 27.2812 45.9281 27.0562 46.8281 25.9875C47.4281 25.2844 47.9344 24.6094 47.9719 24.4875C48.1125 23.9062 48 23.7937 44.5313 20.9062L41.2031 18.1312L41.1563 11.8312L41.1094 5.53125L40.8469 5.27812L40.5938 5.01562L37.5656 4.9875C35.5969 4.96875 34.425 4.9875 34.2094 5.05312C33.5719 5.24062 33.5719 5.25937 33.5438 8.67187L33.5156 11.7375L29.6906 8.55C25.5938 5.12812 25.4719 5.04375 24.3281 4.94062C24.0188 4.9125 23.5594 4.92187 23.3156 4.96875Z"
-                                fill="white"/>
-                            <path
-                                d="M15.3938 19.7063L6.84375 26.7563V34.0688C6.84375 39.1031 6.88125 41.5125 6.94688 41.7656C7.0875 42.2813 7.725 42.8813 8.27813 43.0125C8.57813 43.0969 10.4156 43.125 14.4281 43.125H20.1563V37.4063V31.6875H24H27.8438V37.4063V43.125H33.5719C37.3875 43.125 39.4313 43.0875 39.6938 43.0219C40.2188 42.8906 40.7625 42.4406 40.9781 41.9625C41.1469 41.5969 41.1563 41.175 41.1563 34.1625V26.7563L32.6344 19.7344C27.9563 15.8719 24.0844 12.7031 24.0375 12.6844C23.9906 12.6656 20.1 15.825 15.3938 19.7063Z"
-                                fill="white"/>
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_20_2">
-                                <rect width="48" height="48" fill="white"/>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                }
-                {
-                    isEdit ? 'Отредактировать задачу' : 'Создать задачу'
-                }
-            </Button>
-            <Button
-                variant="secondary"
-                disabled={isLoading}
-                type="button"
-                className={`w-full text-left gap-4 text-wrap h-16 text-lg leading-6 font-semibold py-4 mt-2 ${isLoading ? 'bg-gray-400' : ''}`}
-                onClick={() => onSubmit(task_id, true)}
             >
                 {
                     isLoading ?
@@ -331,7 +305,36 @@ export const TaskForm = memo((props:  Props) => {
                             <rect y="24" width="64" height="16" fill="white"/>
                         </svg>
                 }
-                {`${isEdit ? 'Отредактировать ' : 'Создать '}  задачу и `}<br />{`начать создание следующей`}
+                {
+                    isEdit ? 'Редактировать задачу цели' : 'Добавить задачу к цели'
+                }
+            </Button>
+            <Button
+                variant="secondary"
+                disabled={isLoading}
+                onClick={() => onSubmit(task_id)}
+                type="button"
+                className={`w-full text-left gap-4 text-wrap text-lg leading-6 font-semibold py-4 mt-2 ${isLoading ? 'bg-gray-400' : ''}`}
+            >
+                {
+                    isLoading ? <Loader/> :
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_20_2)">
+                                <path
+                                    d="M23.3156 4.96875C23.0625 5.01562 22.6406 5.15625 22.3781 5.2875C22.0875 5.4375 17.5031 9.1875 11.0156 14.6062C-0.440626 24.1594 -0.121876 23.8687 0.0281241 24.4875C0.0656241 24.6094 0.571874 25.2844 1.17187 25.9875C2.07187 27.0562 2.30625 27.2812 2.56875 27.3375C2.74687 27.3656 2.98125 27.3656 3.08437 27.3281C3.1875 27.3 7.93125 23.3906 13.6125 18.6562C19.3031 13.9125 23.9719 10.0312 24 10.0312C24.0281 10.0312 28.6969 13.9125 34.3875 18.6562C40.0688 23.3906 44.8125 27.3 44.9156 27.3281C45.0188 27.3656 45.2531 27.3656 45.4313 27.3375C45.6938 27.2812 45.9281 27.0562 46.8281 25.9875C47.4281 25.2844 47.9344 24.6094 47.9719 24.4875C48.1125 23.9062 48 23.7937 44.5313 20.9062L41.2031 18.1312L41.1563 11.8312L41.1094 5.53125L40.8469 5.27812L40.5938 5.01562L37.5656 4.9875C35.5969 4.96875 34.425 4.9875 34.2094 5.05312C33.5719 5.24062 33.5719 5.25937 33.5438 8.67187L33.5156 11.7375L29.6906 8.55C25.5938 5.12812 25.4719 5.04375 24.3281 4.94062C24.0188 4.9125 23.5594 4.92187 23.3156 4.96875Z"
+                                    fill="white"/>
+                                <path
+                                    d="M15.3938 19.7063L6.84375 26.7563V34.0688C6.84375 39.1031 6.88125 41.5125 6.94688 41.7656C7.0875 42.2813 7.725 42.8813 8.27813 43.0125C8.57813 43.0969 10.4156 43.125 14.4281 43.125H20.1563V37.4063V31.6875H24H27.8438V37.4063V43.125H33.5719C37.3875 43.125 39.4313 43.0875 39.6938 43.0219C40.2188 42.8906 40.7625 42.4406 40.9781 41.9625C41.1469 41.5969 41.1563 41.175 41.1563 34.1625V26.7563L32.6344 19.7344C27.9563 15.8719 24.0844 12.7031 24.0375 12.6844C23.9906 12.6656 20.1 15.825 15.3938 19.7063Z"
+                                    fill="white"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_20_2">
+                                    <rect width="48" height="48" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                }
+                {`Начать достижение цели`}
             </Button>
         </form>
     );
