@@ -101,7 +101,7 @@ export const ApiService = {
     },
     async deleteGoal(goal_id: string, auth: string) {
         try {
-            return await instance.delete(`/user/?goal_id=${goal_id}`,
+            return await instance.delete(`/goal/?id=${goal_id}`,
                 {
                     headers: {
                         Authorization: `twa ${auth}`
